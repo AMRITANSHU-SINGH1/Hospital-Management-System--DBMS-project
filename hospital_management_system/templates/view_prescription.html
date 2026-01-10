@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1976d2;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #1976d2;
+            margin: 0;
+            font-size: 28px;
+        }
+        .prescription-id {
+            color: #666;
+            margin-top: 5px;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+        .info-box {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #1976d2;
+        }
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 16px;
+        }
+        .info-box p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        .detail-section h3 {
+            color: #1976d2;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .detail-content {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .medicines-list {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .print-btn {
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-top: 20px;
+        }
+        .print-btn:hover {
+            background: #45a049;
+        }
+        @media print {
+            .back-link, .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('patient_prescriptions') }}" class="back-link">&larr; Back to Prescriptions</a>
+        
+        <div class="header">
+            <h1>Medical Prescription</h1>
+            <p class="prescription-id">Prescription ID: #{{ prescription.id }}</p>
+            <p class="prescription-id">Date: {{ prescription.date.strftime('%B %d, %Y') }}</p>
+        </div>
+
+        <!-- Patient and Doctor Info -->
+        <div class="info-section">
+            <div class="info-box">
+                <h3>Patient Information</h3>
+                <p><strong>Name:</strong> {{ patient.name }}</p>
+                <p><strong>Patient ID:</strong> {{ patient.pat_id }}</p>
+                <p><strong>Age:</strong> {{ patient.age }} years</p>
+                <p><strong>Blood Group:</strong> {{ patient.blood }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Doctor Information</h3>
+                <p><strong>Name:</strong> {{ doctor.name }}</p>
+                <p><strong>Doctor ID:</strong> {{ doctor.doc_id }}</p>
+                <p><strong>Specialization:</strong> {{ doctor.spec }}</p>
+                <p><strong>Appointment:</strong> {{ appointment.date.strftime('%b %d, %Y') }} at {{ appointment.time }}</p>
+            </div>
+        </div>
+
+        <!-- Diagnosis -->
+        <div class="detail-section">
+            <h3>Diagnosis</h3>
+            <div class="detail-content">{{ prescription.diagnosis }}</div>
+        </div>
+
+        <!-- Medicines -->
+        <div class="detail-section">
+            <h3>Prescribed Medicines</h3>
+            <div class="medicines-list">{{ prescription.medicines }}</div>
+        </div>
+
+        <!-- Dosage -->
+        {% if prescription.dosage %}
+        <div class="detail-section">
+            <h3>Dosage Instructions</h3>
+            <div class="detail-content">{{ prescription.dosage }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Instructions -->
+        {% if prescription.instructions %}
+        <div class="detail-section">
+            <h3>General Instructions</h3>
+            <div class="detail-content">{{ prescription.instructions }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Notes -->
+        {% if prescription.notes %}
+        <div class="detail-section">
+            <h3>Additional Notes</h3>
+            <div class="detail-content">{{ prescription.notes }}</div>
+        </div>
+        {% endif %}
+
+        <button onclick="window.print()" class="print-btn">Print Prescription</button>
+        <div style="clear: both;"></div>
+    </div>
+</body>
+</html>

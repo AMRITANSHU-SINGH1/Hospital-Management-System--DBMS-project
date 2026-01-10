@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Confirmed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .success-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .appointment-details {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .detail-row {
+            margin: 10px 0;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+        .value {
+            color: #333;
+        }
+        .buttons {
+            margin-top: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #45a049;
+        }
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1>Appointment Confirmed!</h1>
+        <p>Your appointment has been successfully booked.</p>
+
+        <div class="appointment-details">
+            <div class="detail-row">
+                <span class="label">Appointment ID:</span>
+                <span class="value">#{{ appointment.id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Doctor:</span>
+                <span class="value">{{ doctor.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Specialization:</span>
+                <span class="value">{{ doctor.spec }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Date:</span>
+                <span class="value">{{ appointment.date.strftime('%B %d, %Y') }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Time:</span>
+                <span class="value">{{ appointment.time }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Status:</span>
+                <span class="value" style="color: #ff9800;">{{ appointment.status }}</span>
+            </div>
+        </div>
+
+        <p style="color: #666; font-size: 14px;">
+            Please arrive 10 minutes before your scheduled time.
+        </p>
+
+        <div class="buttons">
+            <a href="{{ url_for('patient_appointments') }}" class="btn btn-primary">View My Appointments</a>
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

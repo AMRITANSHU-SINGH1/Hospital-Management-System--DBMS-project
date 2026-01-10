@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            flex: 1;
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .btn-cancel {
+            background: #f44336;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-cancel:hover {
+            background: #da190b;
+        }
+        .nav-links {
+            margin: 20px 0;
+        }
+        .nav-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #1976d2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .nav-links a:hover {
+            background: #1565c0;
+        }
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .logout-btn:hover {
+            background: #da190b;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .flash-message {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-message">
+                    {% for message in messages %}
+                        <p style="margin: 5px 0;">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_doctors }}</div>
+                <div class="stat-label">Total Doctors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_patients }}</div>
+                <div class="stat-label">Total Patients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_appointments }}</div>
+                <div class="stat-label">Total Appointments</div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="nav-links">
+            <a href="/add_doctor">Add Doctor</a>
+            <a href="/doctors">View Doctors</a>
+            <a href="/add_patient">Add Patient</a>
+            <a href="/patients">View Patients</a>
+            <a href="/add_department">Add Department</a>
+            <a href="/departments">View Departments</a>
+            <a href="/Admin/prescriptions">Prescriptions</a>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="section">
+            <h2>Upcoming Appointments</h2>
+            {% if upcoming_appointments %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Doctor</th>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in upcoming_appointments %}
+                        <tr>
+                            <td>#{{ appt.Appointment.id }}</td>
+                            <td>{{ appt.Doctor.name }}</td>
+                            <td>{{ appt.Patient.name }}</td>
+                            <td>{{ appt.Appointment.date.strftime('%b %d, %Y') }}</td>
+                            <td>{{ appt.Appointment.time }}</td>
+                            <td>
+                                <span class="status status-{{ appt.Appointment.status.lower() }}">
+                                    {{ appt.Appointment.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if appt.Appointment.status not in ['Cancelled', 'Completed'] %}
+                                    <form method="POST" action="{{ url_for('admin_cancel_appointment', id=appt.Appointment.id) }}"
+                                          onsubmit="return confirm('Are you sure you want to cancel this appointment?');"
+                                          style="display: inline;">
+                                        <button type="submit" class="btn-cancel">Cancel</button>
+                                    </form>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="text-align: center; color: #999; padding: 40px;">
+                    No upcoming appointments.
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- Past Appointments -->
+        <div class="section">
+            <h2>Past Appointments</h2>
+            {% if past_appointments %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Doctor</th>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in past_appointments %}
+                        <tr>
+                            <td>#{{ appt.Appointment.id }}</td>
+                            <td>{{ appt.Doctor.name }}</td>
+                            <td>{{ appt.Patient.name }}</td>
+                            <td>{{ appt.Appointment.date.strftime('%b %d, %Y') }}</td>
+                            <td>{{ appt.Appointment.time }}</td>
+                            <td>
+                                <span class="status status-{{ appt.Appointment.status.lower() }}">
+                                    {{ appt.Appointment.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="text-align: center; color: #999; padding: 40px;">
+                    No past appointments.
+                </p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+</body>
+</html>

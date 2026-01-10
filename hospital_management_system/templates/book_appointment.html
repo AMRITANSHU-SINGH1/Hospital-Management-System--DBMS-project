@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .doctor-info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-slot:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .time-slot.booked {
+            background: #ccc;
+            border-color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ✅ NEW: Style for past time slots */
+        .time-slot.past {
+            background: #f5f5f5;
+            border-color: #bbb;
+            cursor: not-allowed;
+            opacity: 0.5;
+            color: #999;
+        }
+
+        .time-slot.past:hover {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .time-slot input[type="radio"] {
+            display: none;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .flash-message {
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Book Appointment</h1>
+
+        <div class="doctor-info">
+            <h3>Doctor: {{ doctor.name }}</h3>
+            <p><strong>Specialization:</strong> {{ doctor.spec }}</p>
+            <p><strong>Date:</strong> {{ availability.date.strftime('%B %d, %Y') }}</p>
+            <p><strong>Available:</strong> {{ availability.start_time }} - {{ availability.end_time }}</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-message">
+            {% for message in messages %}
+            <p style="margin: 5px 0;">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <h3>Select Time Slot:</h3>
+            <div class="time-slots">
+                {% set available_slots = namespace(count=0) %}
+                {% for slot in time_slots %}
+                {% if slot.is_booked %}
+                <div class="time-slot booked">
+                    {{ slot.time }}
+                    <br><small>(Booked)</small>
+                </div>
+                {% elif slot.is_past %}
+                <div class="time-slot past">
+                    {{ slot.time }}
+                    <br><small>(Passed)</small>
+                </div>
+                {% else %}
+                {% set available_slots.count = available_slots.count + 1 %}
+                <div class="time-slot">
+                    <input type="radio" name="time_slot" id="slot_{{ loop.index }}" value="{{ slot.time }}" required>
+                    <label for="slot_{{ loop.index }}" style="cursor: pointer; display: block;">
+                        {{ slot.time }}
+                    </label>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <!-- <div>
+               Enter the reason for coming: <input type="text" name="reason" >
+            </div> -->
+
+            <!-- ✅ NEW: Show message or disable button if no slots available -->
+            {% if available_slots.count == 0 %}
+            <p style="color: #c62828; font-weight: bold;">No available time slots for this date.</p>
+            <button type="button" disabled style="background: #ccc; cursor: not-allowed;">No Slots Available</button>
+            {% else %}
+            <button type="submit">Confirm Booking</button>
+            {% endif %}
+        </form>
+
+        <a href="{{ url_for('patient_dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <script>
+        // This is sed for the 
+        document.querySelectorAll('.time-slot:not(.booked):not(.past)').forEach(slot => {
+            slot.addEventListener('click', function () {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    document.querySelectorAll('.time-slot').forEach(s => {
+                        s.style.background = '';
+                        s.style.color = '';
+                    });
+                    this.style.background = '#4CAF50';
+                    this.style.color = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

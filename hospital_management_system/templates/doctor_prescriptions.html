@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1976d2;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .btn-view {
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .btn-view:hover {
+            background: #45a049;
+        }
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('doctor_list_patients') }}" class="back-link">&larr; Back to All patients</a>
+        
+        <h1> Patient Recrods-{{patient.name}}</h1>
+        <p style="color: #666;">View all the records of the patient</p>
+
+        {% if prescriptions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Diagnosis</th>
+                        <th>Medicines</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription in prescriptions %}
+                    <tr>
+                        <td>{{ prescription.date.strftime('%b %d, %Y') }}</td>
+                        <td>{{ patient.name }}<br><small style="color: #666;">{{ patient.pat_id }}</small></td>
+                        <td>{{ prescription.diagnosis[:50] }}{% if prescription.diagnosis|length > 50 %}...{% endif %}</td>
+                        <td>{{ prescription.medicines.split('\n')[0][:40] }}{% if prescription.medicines|length > 40 %}...{% endif %}</td>
+                        <td>
+                            <a href="{{ url_for('doctor_view_prescription', id=prescription.id) }}" class="btn-view">View Details</a><br><br>
+                            <a href="{{ url_for('update_prescription', id=prescription.id) }}" class="btn-view">Update Details</a>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">No Records of the patients Found</p>
+        {% endif %}
+    </div>
+</body>
+</html>

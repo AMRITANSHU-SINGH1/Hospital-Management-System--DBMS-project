@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Prescriptions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1976d2;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .btn-view {
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .btn-view:hover {
+            background: #45a049;
+        }
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('patient_dashboard') }}" class="back-link">&larr; Back to Dashboard</a>
+        
+        <h1>My Prescriptions</h1>
+        <p style="color: #666;">View all your medical prescriptions and history</p>
+
+        {% if prescriptions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Doctor</th>
+                        <th>Diagnosis</th>
+                        <th>Medicines</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription, doctor, appointment in prescriptions %}
+                    <tr>
+                        <td>{{ prescription.date.strftime('%b %d, %Y') }}</td>
+                        <td>{{ doctor.name }}<br><small style="color: #666;">{{ doctor.spec }}</small></td>
+                        <td>{{ prescription.diagnosis[:50] }}{% if prescription.diagnosis|length > 50 %}...{% endif %}</td>
+                        <td>{{ prescription.medicines.split('\n')[0][:40] }}{% if prescription.medicines|length > 40 %}...{% endif %}</td>
+                        <td>
+                            <a href="{{ url_for('view_prescription', id=prescription.id) }}" class="btn-view">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">No prescriptions found. Your prescriptions will appear here after doctor consultations.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
