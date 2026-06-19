@@ -1,11 +1,11 @@
 # Hospital_Management_System
 MedSync: Digital Healthcare Ecosystem 🏥
 
-Overview
+##  Overview
 
 MedSync is a full-stack, scalable digital healthcare management system designed to streamline the interactions between hospital administrators, doctors, and patients. Built with Python and Flask, this ecosystem manages the end-to-end software development life cycle (SDLC) of hospital operations, featuring a highly normalized relational database schema to maintain data integrity.
 
-🌟 Key Technical Highlights
+## 🌟 Key Technical Highlights
 
 Role-Based Access Control (RBAC): Implemented custom Python decorators (@admin_required, @doctor_required, @patient_required) coupled with Flask sessions for secure route protection.
 
@@ -15,9 +15,9 @@ Dynamic Time-Slot Generation: Engineered an algorithm using Python's datetime an
 
 Security: Integrated werkzeug.security for robust password hashing (generate_password_hash, check_password_hash).
 
-👥 System Roles & Features
+##👥 System Roles & Features
 
-1. Administrator Module
+####1. Administrator Module
 
 Global Dashboard: Oversee total doctors, patients, and system-wide upcoming/past appointments.
 
@@ -25,7 +25,7 @@ Entity Management: Perform CRUD operations on Hospital Departments, Doctor profi
 
 Record Oversight: Global access to view any patient's prescription history and appointment logs.
 
-2. Doctor Portal
+####2. Doctor Portal
 
 Dynamic Scheduling: Add, update, and toggle daily availability slots and durations.
 
@@ -33,7 +33,7 @@ Appointment Management: View upcoming schedules, mark appointments as completed,
 
 Clinical Records: Generate, update, and manage detailed prescriptions (diagnosis, medicines, dosages) linked directly to specific appointment IDs.
 
-3. Patient Dashboard
+####3. Patient Dashboard
 
 Secure Onboarding: Registration system with email validation and secure credential storage.
 
@@ -41,7 +41,7 @@ Smart Booking: Filter doctors by specialty and book dynamic time slots (prevents
 
 Medical History: Access past appointments and view detailed digital prescriptions.
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 Backend: Python, Flask
 
@@ -51,46 +51,46 @@ Frontend: HTML5, CSS3, Jinja2 Templating
 
 Authentication: Flask Sessions, Werkzeug Security
 
-🚀 Local Setup & Installation
+## 🚀 Local Setup & Installation
 
 Follow these steps to run the application locally:
 
-1. Clone the repository
+#### 1. Clone the repository
 
 git clone (https://github.com/AMRITANSHU-SINGH1/Hospital-Management-System--DBMS-project.git)
 
 
-2. Create and activate a virtual environment
+#### 2. Create and activate a virtual environment
 
-# Windows
+##### Windows
 python -m venv venv
 venv\Scripts\activate
 
-# macOS/Linux
+##### macOS/Linux
 python3 -m venv venv
 source venv/bin/activate
 
 
-3. Install dependencies
+#### 3. Install dependencies
 
 pip install Flask Flask-SQLAlchemy Werkzeug
 
 
-4. Run the application
+#### 4. Run the application
 
 python app.py
 
 
 Note: The SQLite database (hospital.db) and all tables will be generated automatically on the first run.
 
-5. Default Admin Credentials
+#### 5. Default Admin Credentials
 Upon initialization, the system automatically creates a master admin account:
 
 Username: admin
 
 Password: admin123
 
-🔮 Future Enhancements
+## 🔮 Future Enhancements
 
 Database Migration: Transition from SQLite to PostgreSQL for enterprise-level scaling.
 
