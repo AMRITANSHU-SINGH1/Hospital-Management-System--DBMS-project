@@ -15,9 +15,9 @@ Dynamic Time-Slot Generation: Engineered an algorithm using Python's datetime an
 
 Security: Integrated werkzeug.security for robust password hashing (generate_password_hash, check_password_hash).
 
-##👥 System Roles & Features
+## 👥 System Roles & Features
 
-####1. Administrator Module
+#### 1. Administrator Module
 
 Global Dashboard: Oversee total doctors, patients, and system-wide upcoming/past appointments.
 
@@ -25,7 +25,7 @@ Entity Management: Perform CRUD operations on Hospital Departments, Doctor profi
 
 Record Oversight: Global access to view any patient's prescription history and appointment logs.
 
-####2. Doctor Portal
+#### 2. Doctor Portal
 
 Dynamic Scheduling: Add, update, and toggle daily availability slots and durations.
 
@@ -33,7 +33,7 @@ Appointment Management: View upcoming schedules, mark appointments as completed,
 
 Clinical Records: Generate, update, and manage detailed prescriptions (diagnosis, medicines, dosages) linked directly to specific appointment IDs.
 
-####3. Patient Dashboard
+#### 3. Patient Dashboard
 
 Secure Onboarding: Registration system with email validation and secure credential storage.
 
